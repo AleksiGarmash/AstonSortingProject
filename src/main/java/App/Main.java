@@ -65,11 +65,13 @@ public class Main {
     private static void fillManual(CustomList<CustomClass> list) {
         list.clear();
 
+
     }
 
     private static void fillRandom(CustomList<CustomClass> list) {
         list.clear();
         Random random = new Random();
+
 
     }
 
@@ -77,6 +79,7 @@ public class Main {
         list.clear();
         System.out.println("Файл: ");
         String path = scanner.nextLine();
+
 
     }
 
