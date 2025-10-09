@@ -7,6 +7,8 @@ public class DataGenerator {
     private static final Random random = new Random();
     private static final String CAPITAL_LETTERS = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ";
     private static final String SMALL_LETTERS = "абвгдежзийклмнопрстуфхцчшщыьэюя";
+    private static final String[] DOMAINS = {"gmail.com", "yandex.ru", "outlook.com", "hotmail.com"};
+    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz1234567890";
 
     public static List<Person> generateRandomPeople(int count) {
         List<Person> result = new ArrayList<>();
@@ -15,6 +17,7 @@ public class DataGenerator {
                     new Person.PersonBuilder()
                             .withName(generateRandomString())
                             .withAge(random.nextInt(80) + 18)
+                            .withEmail(generateRandomEmail())
                             .build()
             );
         }
@@ -34,5 +37,16 @@ public class DataGenerator {
             sb.append(SMALL_LETTERS.charAt(index));
         }
         return sb.toString();
+    }
+
+    private static String generateRandomEmail(){
+        int localPartLength = random.nextInt(8) + 5;
+        StringBuilder localPart = new StringBuilder(localPartLength);
+        for (int i = 0; i < localPartLength; i++) {
+            int index = random.nextInt(ALPHABET.length());
+            localPart.append(ALPHABET.charAt(index));
+        }
+        String domain = DOMAINS[random.nextInt(DOMAINS.length)];
+        return localPart + "@" + domain;
     }
 }
