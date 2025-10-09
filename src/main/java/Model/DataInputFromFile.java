@@ -1,4 +1,6 @@
 package Model;
+import Util.ValidationService;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,12 +16,13 @@ public class DataInputFromFile {
         String line;
         while ((line = br.readLine()) != null) {
             String[] parts = line.split(",");
-            if (parts.length == 2) {
+            if (parts.length == 3) {
                 try {
                     result.add(
                             new Person.PersonBuilder()
                                     .withName(parts[0].trim())
                                     .withAge(Integer.parseInt(parts[1].trim()))
+                                    .withEmail(parts[2].trim())
                                     .build()
                     );
                 } catch (RuntimeException e) {
@@ -47,6 +50,8 @@ public class DataInputFromFile {
             System.out.println("Запись №" + (i + 1) + ":");
             System.out.print("Имя: ");
             String name = scanner.nextLine();
+            System.out.print("Электронная почта: ");
+            String email = scanner.nextLine();
             System.out.print("Возраст: ");
             int age = 18;
             try{
@@ -55,9 +60,8 @@ public class DataInputFromFile {
                 System.err.println("Введите число.");
             }
             scanner.nextLine();
-
             try {
-                result.add(new Person.PersonBuilder().withName(name).withAge(age).build());
+                result.add(new Person.PersonBuilder().withName(name).withAge(age).withEmail(email).build());
             } catch (IllegalArgumentException ex) {
                 System.err.println(ex.getMessage());
             }
