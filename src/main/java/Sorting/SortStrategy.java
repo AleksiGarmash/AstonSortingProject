@@ -1,11 +1,13 @@
 package Sorting;
-
-public interface SortStrategy {
+import java.util.Comparator;
+import java.util.List;
+public interface SortStrategy<T> {
 
     /* TODO: Задание В
         Реализовать сортировку с использованием универсальных дженериков под любые классы программы
         Использовать паттерн Strategy
         */
+    void sort(List<T> list, Comparator<T> comparator);
 
     /* TODO: Задание С
         * Сортировка в ThreadPool, минимум 2 потока (отдельный класс)
