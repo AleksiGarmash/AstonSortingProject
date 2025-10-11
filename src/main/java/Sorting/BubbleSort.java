@@ -4,6 +4,11 @@ import java.util.Comparator;
 import java.util.List;
 
 public class BubbleSort<T> implements SortStrategy<T> {
+    /**
+     * Метод сортировки "Пузырьком"
+     * @param list список для сортировки
+     * @param comparator компаратор для сравнения
+     */
     @Override
     public void sort(List<T> list, Comparator<T> comparator) {
         if (list == null || list.size() <= 1) return;
@@ -28,7 +33,7 @@ public class BubbleSort<T> implements SortStrategy<T> {
 
     }
 
-    private void swap(List<T> list, int i, int j) {
+    private void swap(List<T> list, int i, int j) { //вспомогательный метод для изменения элементов списка местами
         T temp = list.get(i);
         list.set(i, list.get(j));
         list.set(j, temp);
