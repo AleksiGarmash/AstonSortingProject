@@ -1,7 +1,7 @@
 package App;
 
 import Collection.CustomList;
-import Model.CustomClass;
+import Model.Person;
 
 import java.io.IOException;
 import java.util.Random;
@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        CustomList<CustomClass> list = new CustomList<>();
+        CustomList<Person> list = new CustomList<>();
         System.out.println("=== Приложение сортировки данных кастомных классов ===");
 
         while (true) {
@@ -62,18 +62,18 @@ public class Main {
         }
     }
 
-    private static void fillManual(CustomList<CustomClass> list) {
+    private static void fillManual(CustomList<Person> list) {
         list.clear();
 
     }
 
-    private static void fillRandom(CustomList<CustomClass> list) {
+    private static void fillRandom(CustomList<Person> list) {
         list.clear();
         Random random = new Random();
 
     }
 
-    private static void fillFromFile(CustomList<CustomClass> list) {
+    private static void fillFromFile(CustomList<Person> list) {
         list.clear();
         System.out.println("Файл: ");
         String path = scanner.nextLine();
