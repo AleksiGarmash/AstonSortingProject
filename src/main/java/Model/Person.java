@@ -8,10 +8,14 @@ public class Person implements Comparable<Person> {
     private final Integer age;
     private final String email;
 
-    private Person(PersonBuilder builder) {
+    private Person(Builder builder) {
         this.name = builder.name;
         this.age = builder.age;
         this.email = builder.email;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getAge() {
@@ -22,21 +26,21 @@ public class Person implements Comparable<Person> {
         return this.email;
     }
 
-    public static class PersonBuilder {
+    public static class Builder {
         private String name;
         private Integer age;
         private String email;
 
-        public PersonBuilder withName(String name) {
+        public Builder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public PersonBuilder withAge(Integer age) {
+        public Builder withAge(Integer age) {
             this.age = age;
             return this;
         }
-        public PersonBuilder withEmail(String email) {
+        public Builder withEmail(String email) {
             this.email = email;
             System.out.println(email);
             return this;

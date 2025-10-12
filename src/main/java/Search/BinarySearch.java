@@ -1,5 +1,7 @@
 package Search;
 
+import Collection.CustomList;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class BinarySearch {
 
     /* TODO: Задание D
         Реализовать бинарный поиск с использованием универсальных дженериков под любые классы программы */
-    public static <T> int binarySearch(List<T> list, T key, Comparator<T> cmp) {
+    public static <T> int binarySearch(CustomList<T> list, T key, Comparator<T> cmp) {
         int l = 0, r = list.size() - 1;
         while (l <= r) {
             int m = (l + r) >>> 1;

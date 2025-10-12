@@ -14,7 +14,7 @@ public class DataGenerator {
         List<Person> result = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             result.add(
-                    new Person.PersonBuilder()
+                    new Person.Builder()
                             .withName(generateRandomString())
                             .withAge(random.nextInt(80) + 18)
                             .withEmail(generateRandomEmail())

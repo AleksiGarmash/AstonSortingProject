@@ -2,8 +2,9 @@ package App;
 
 import Collection.CustomList;
 import Model.Person;
+import Search.BinarySearch;
 
-import java.io.IOException;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -49,7 +50,7 @@ public class Main {
                 case "3" -> fillFromFile(list);
                 case "4" -> runSort();
                 case "5" -> runSort();
-                case "6" -> runBinarySearch();
+                case "6" -> runBinarySearch(list);
                 case "7" -> runEvenOddSort();
                 case "8" -> appendToFile();
                 case "9" -> countOccurrences();
@@ -84,8 +85,22 @@ public class Main {
 
     }
 
-    private static void runBinarySearch() {
+    private static void runBinarySearch(CustomList<Person> list) {
 
+        if (list.isEmpty()) {
+            System.out.println("Пусто");
+            return;
+        }
+
+        System.out.print("Имя для поиска: ");
+        String key = scanner.nextLine();
+
+        int index = BinarySearch.binarySearch(
+                list,
+                new Person.Builder().withName(key).withAge(0).build(),
+                Comparator.comparing(Person::getName));
+
+        System.out.println(index >= 0 ? "Найдено: " + list.get(index) : "Не найдено");
     }
 
     private static void runEvenOddSort() {

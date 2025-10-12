@@ -1,5 +1,4 @@
 package Model;
-import Util.ValidationService;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -19,7 +18,7 @@ public class DataInputFromFile {
             if (parts.length == 3) {
                 try {
                     result.add(
-                            new Person.PersonBuilder()
+                            new Person.Builder()
                                     .withName(parts[0].trim())
                                     .withAge(Integer.parseInt(parts[1].trim()))
                                     .withEmail(parts[2].trim())
@@ -61,7 +60,7 @@ public class DataInputFromFile {
             }
             scanner.nextLine();
             try {
-                result.add(new Person.PersonBuilder().withName(name).withAge(age).withEmail(email).build());
+                result.add(new Person.Builder().withName(name).withAge(age).withEmail(email).build());
             } catch (IllegalArgumentException ex) {
                 System.err.println(ex.getMessage());
             }
