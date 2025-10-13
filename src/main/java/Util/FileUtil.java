@@ -1,5 +1,7 @@
 package Util;
 
+import Collection.CustomList;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,7 @@ public class FileUtil {
         return list;
     }
 
-    public static <T> void appendToFile(String file, List<T> items) {
+    public static <T> void appendToFile(String file, CustomList<T> items) {
         try (FileWriter fw = new FileWriter(file, true);
              BufferedWriter bw = new BufferedWriter(fw)) {
             for (T t : items) {

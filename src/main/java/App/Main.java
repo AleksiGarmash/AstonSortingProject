@@ -4,13 +4,16 @@ import Collection.CustomList;
 import Model.DataGenerator;
 import Model.Person;
 import Search.BinarySearch;
+import Sorting.*;
 import Util.FileUtil;
 import Util.Validation;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.function.Function;
 
 public class Main {
 
@@ -31,17 +34,21 @@ public class Main {
         while (true) {
             System.out.println(
                     "\nМеню: \n" +
-                            "1. Заполнение данных вручную\n" +
-                            "2. Заполнение данных рандомно\n" +
-                            "3. Заполнение данных из файла\n" +
-                            "4. Сортировка ... \n" +
-                            "5. Сортировка ... \n" +
-                            "6. Бинарный поиск\n" +
-                            "== Дополнительное ==\n" +
-                            "7. Сортировка ... \n" + // чет\нечет
-                            "8. Запись данных в файл\n" +
-                            "9. Подсчет вхождений (многопоточно)\n" +
-                            "0. Выход\n" +
+                            "1. Заполнение данных вручную \n" +
+                            "2. Заполнение данных рандомно \n" +
+                            "3. Заполнение данных из файла \n" +
+                            "4. Быстрая сортировка \n" +
+                            "5. Сортировка пузырьком \n" +
+                            "6. Сортировка слиянием \n" +
+                            "7. Многопоточная сортировка слиянием (в 2 потока) \n" +
+                            "8. Бинарный поиск \n" +
+                            "== Дополнительное == \n" +
+                            "9. Быстрая сортировка четных полей \n" +
+                            "10. Сортировка пузырьком четных полей \n" +
+                            "11. Сортировка слиянием четных полей \n" +
+                            "12. Запись данных в файл\n" +
+                            "13. Подсчет вхождений (многопоточно)\n" +
+                            "14. Выход\n" +
                             "\nВыбор: "
 
             );
@@ -52,13 +59,17 @@ public class Main {
                 case "1" -> fillManual(list);
                 case "2" -> fillRandom(list);
                 case "3" -> fillFromFile(list);
-                case "4" -> runSort();
-                case "5" -> runSort();
-                case "6" -> runBinarySearch(list);
-                case "7" -> runEvenFieldSort();
-                case "8" -> appendToFile();
-                case "9" -> countOccurrences();
-                case "0" -> {
+                case "4" -> runSort(list, new QuickSort<>());
+                case "5" -> runSort(list, new BubbleSort<>());
+                case "6" -> runSort(list, new MergeSort<>());
+                case "7" -> runSort(list, new ParallelMergeSort<>());
+                case "8" -> runBinarySearch(list);
+                case "9" -> runSort(list, new EvenFieldQuickSort<>(Person::getAge));
+                case "10" -> runSort(list, new EvenFieldBubbleSort<>(Person::getAge));
+                case "11" -> runSort(list, new EvenFieldMergeSort<>(Person::getAge));
+                case "12" -> appendToFile(list);
+                case "13" -> countOccurrences();
+                case "14" -> {
                     System.out.println("Выход...");
                     return;
                 }
@@ -147,8 +158,16 @@ public class Main {
 
     }
 
-    private static <T> void runSort() {
+    private static <T> void runSort(CustomList<T> list, Sorting.SortStrategy<T> strategy) {
 
+        if (list.isEmpty()) {
+            System.out.println("Коллекция пуста!");
+            return;
+        }
+
+        Sorter<T> sorter = new Sorter<>(strategy);
+        sorter.sort((List<T>) list, Comparator.comparing(Object::toString));
+        System.out.println("Отсортировано");
     }
 
     private static void runBinarySearch(CustomList<Person> list) {
@@ -169,12 +188,14 @@ public class Main {
         System.out.println(index >= 0 ? "Найдено: " + list.get(index) : "Не найдено");
     }
 
-    private static void runEvenFieldSort() {
+    private static void appendToFile(CustomList<Person> list) {
+        list.clear();
 
-    }
+        System.out.print("Введите имя файла для записи: ");
+        String file = scanner.nextLine();
 
-    private static void appendToFile() {
-
+        FileUtil.appendToFile(file, list);
+        System.out.println("Данные добавлены!");
     }
 
     private static void countOccurrences() {
