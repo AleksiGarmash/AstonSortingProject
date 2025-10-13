@@ -19,7 +19,7 @@ public class EvenFieldBubbleSort<T> implements SortStrategy<T> {
         this.fieldExtractor = fieldExtractor;
     }
 
-    /**п
+    /**
      * Сортирует список, упорядочивая только элементы с четными значениями поля. Элементы с нечетными значениями сохраняют свои исходные позиции.
      * @param list список для сортировки
      * @param comparator компаратор для сравнения элементов
