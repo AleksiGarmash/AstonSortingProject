@@ -1,12 +1,10 @@
 package Util;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.util.List;
 
-public class FileUtil {
+public final class FileUtil {
+    private FileUtil() {}
 
     /* TODO: Задание D
         Реализовать работу с файлом для дальнейшей валидации данных:
@@ -26,5 +24,24 @@ public class FileUtil {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+    /**
+     * проверка: записывает строки в файл и выводит содержимое обратно.
+     */
+    public static void main(String[] args) {
+        String path = "test_data.txt";
+        List<String> data = List.of("one", "two", "three");
+
+        appendToFile(path, data);
+        System.out.println("Данные успешно записаны в файл: " + path);
+
+        // Проверим, что записалось
+        System.out.println("Содержимое файла:");
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            br.lines().forEach(System.out::println);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
