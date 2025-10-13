@@ -59,7 +59,7 @@ public class Person implements Comparable<Person> {
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "\nPerson{" +
                 "name='" + name + '\'' +
                 ", age=" + age +'\'' +
                 ", email=" + email +

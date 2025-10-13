@@ -13,7 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.function.Function;
 
 public class Main {
 
@@ -42,7 +41,7 @@ public class Main {
                             "6. Сортировка слиянием \n" +
                             "7. Многопоточная сортировка слиянием (в 2 потока) \n" +
                             "8. Бинарный поиск \n" +
-                            "== Дополнительное == \n" +
+                            "== Дополнительные функции == \n" +
                             "9. Быстрая сортировка четных полей \n" +
                             "10. Сортировка пузырьком четных полей \n" +
                             "11. Сортировка слиянием четных полей \n" +
@@ -83,6 +82,7 @@ public class Main {
 
         System.out.println("Введите количество записей: ");
         int n = scanner.nextInt();
+        scanner.nextLine();
 
         for (int i = 0; i < n; i++) {
             System.out.println("Запись №" + (i + 1) + ":");
@@ -91,13 +91,13 @@ public class Main {
             String name = scanner.nextLine();
 
             System.out.print("Возраст: ");
-            int age = Integer.parseInt(scanner.nextLine());
+            int age = scanner.nextInt();
+            scanner.nextLine();
 
             System.out.print("Электронная почта: ");
             String email = scanner.nextLine();
 
             try {
-                Validation.validatePerson(name, age, email);
                 list.add(new Person.Builder().withName(name).withAge(age).withEmail(email).build());
             } catch (Exception e) {
                 System.out.println("Ошибка ввода! Повторите.");
@@ -105,7 +105,7 @@ public class Main {
             }
         }
 
-
+        System.out.println(list.toString());
     }
 
     private static void fillRandom(CustomList<Person> list) {
@@ -120,11 +120,12 @@ public class Main {
             list.add(
                     new Person.Builder()
                             .withName(generator.generateRandomString())
-                            .withAge(random.nextInt(80) + 18)
+                            .withAge(random.nextInt(80) + 5)
                             .withEmail(generator.generateRandomEmail())
                             .build()
             );
         }
+        System.out.println(list.toString());
     }
 
     private static void fillFromFile(CustomList<Person> list) throws IOException {
@@ -140,7 +141,6 @@ public class Main {
                 String email = parts[2].trim();
 
                 try {
-                    Validation.validatePerson(name, age, email);
                     list.add(
                             new Person.Builder()
                                     .withName(name)
@@ -155,6 +155,7 @@ public class Main {
                 System.err.println("Неправильный формат строки: " + line);
             }
         });
+        System.out.println(list.toString());
 
     }
 
@@ -166,14 +167,14 @@ public class Main {
         }
 
         Sorter<T> sorter = new Sorter<>(strategy);
-        sorter.sort((List<T>) list, Comparator.comparing(Object::toString));
-        System.out.println("Отсортировано");
+        sorter.sort( list.asList(), Comparator.comparing(Object::toString));
+        System.out.println("Отсортировано\n" + list.toString());
     }
 
     private static void runBinarySearch(CustomList<Person> list) {
 
         if (list.isEmpty()) {
-            System.out.println("Пусто");
+            System.out.println("Коллекция пуста!");
             return;
         }
 
@@ -182,7 +183,7 @@ public class Main {
 
         int index = BinarySearch.binarySearch(
                 list,
-                new Person.Builder().withName(key).withAge(0).build(),
+                new Person.Builder().withName(key).build(),
                 Comparator.comparing(Person::getName));
 
         System.out.println(index >= 0 ? "Найдено: " + list.get(index) : "Не найдено");
@@ -195,7 +196,7 @@ public class Main {
         String file = scanner.nextLine();
 
         FileUtil.appendToFile(file, list);
-        System.out.println("Данные добавлены!");
+        System.out.println("Данные записаны в файл!");
     }
 
     private static void countOccurrences() {

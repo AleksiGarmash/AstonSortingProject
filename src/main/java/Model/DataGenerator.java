@@ -9,7 +9,7 @@ public class DataGenerator {
     private static final String CHARS_FOR_EMAIL = "abcdefghijklmnopqrstuvwxyz1234567890";
 
     public static String generateRandomString() {
-        int length = random.nextInt(11) + 5; // длина от 5 до 15
+        int length = random.nextInt(5) + 2; // длина от 5 до 15
         StringBuilder sb = new StringBuilder(length);
         sb.append(CAPITAL_LETTERS.charAt(random.nextInt(CAPITAL_LETTERS.length())));
         for (int i = 0; i < length-1; i++) {
@@ -20,7 +20,7 @@ public class DataGenerator {
     }
 
     public static String generateRandomEmail(){
-        int localPartLength = random.nextInt(8) + 5;
+        int localPartLength = random.nextInt(6) + 4;
         StringBuilder localPart = new StringBuilder(localPartLength);
         for (int i = 0; i < localPartLength; i++) {
             int index = random.nextInt(CHARS_FOR_EMAIL.length());
