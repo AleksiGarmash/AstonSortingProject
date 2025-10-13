@@ -1,9 +1,7 @@
 package Util;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtil {
@@ -16,6 +14,18 @@ public class FileUtil {
         ДОПОЛНИТЕЛЬНОЕ ЗАДАНИЕ 2:
         Реализовать функционал для записи отсортированных коллекций/найденных значений в файл в режиме добавления данных.
      */
+
+    public static List<String> readFile(String path) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+        List<String> list = new ArrayList<>();
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            list.add(line);
+        }
+        return list;
+    }
+
     public static <T> void appendToFile(String file, List<T> items) {
         try (FileWriter fw = new FileWriter(file, true);
              BufferedWriter bw = new BufferedWriter(fw)) {

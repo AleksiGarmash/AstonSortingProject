@@ -1,7 +1,7 @@
 package Model;
 
 
-import Util.ValidationService;
+import Util.Validation;
 
 public class Person implements Comparable<Person> {
     private final String name;
@@ -47,7 +47,7 @@ public class Person implements Comparable<Person> {
         }
 
         public Person build() {
-            ValidationService.validatePerson(name, age, email);
+            Validation.validatePerson(name, age, email);
             return new Person(this);
         }
     }

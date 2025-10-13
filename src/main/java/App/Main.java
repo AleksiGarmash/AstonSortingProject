@@ -1,9 +1,13 @@
 package App;
 
 import Collection.CustomList;
+import Model.DataGenerator;
 import Model.Person;
 import Search.BinarySearch;
+import Util.FileUtil;
+import Util.Validation;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.Random;
 import java.util.Scanner;
@@ -19,7 +23,7 @@ public class Main {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         CustomList<Person> list = new CustomList<>();
         System.out.println("=== Приложение сортировки данных кастомных классов ===");
@@ -51,7 +55,7 @@ public class Main {
                 case "4" -> runSort();
                 case "5" -> runSort();
                 case "6" -> runBinarySearch(list);
-                case "7" -> runEvenOddSort();
+                case "7" -> runEvenFieldSort();
                 case "8" -> appendToFile();
                 case "9" -> countOccurrences();
                 case "0" -> {
@@ -66,18 +70,80 @@ public class Main {
     private static void fillManual(CustomList<Person> list) {
         list.clear();
 
+        System.out.println("Введите количество записей: ");
+        int n = scanner.nextInt();
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("Запись №" + (i + 1) + ":");
+
+            System.out.print("Имя: ");
+            String name = scanner.nextLine();
+
+            System.out.print("Возраст: ");
+            int age = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Электронная почта: ");
+            String email = scanner.nextLine();
+
+            try {
+                Validation.validatePerson(name, age, email);
+                list.add(new Person.Builder().withName(name).withAge(age).withEmail(email).build());
+            } catch (Exception e) {
+                System.out.println("Ошибка ввода! Повторите.");
+                i--;
+            }
+        }
+
+
     }
 
     private static void fillRandom(CustomList<Person> list) {
         list.clear();
         Random random = new Random();
+        DataGenerator generator = new DataGenerator();
 
+        System.out.println("Введите количество записей: ");
+        int n = scanner.nextInt();
+
+        for (int i = 0; i < n; i++) {
+            list.add(
+                    new Person.Builder()
+                            .withName(generator.generateRandomString())
+                            .withAge(random.nextInt(80) + 18)
+                            .withEmail(generator.generateRandomEmail())
+                            .build()
+            );
+        }
     }
 
-    private static void fillFromFile(CustomList<Person> list) {
+    private static void fillFromFile(CustomList<Person> list) throws IOException {
         list.clear();
         System.out.println("Файл: ");
         String path = scanner.nextLine();
+
+        FileUtil.readFile(path).forEach(line -> {
+            String[] parts = line.split(", ");
+            if (parts.length == 3) {
+                String name = parts[0].trim();
+                int age = Integer.parseInt(parts[1].trim());
+                String email = parts[2].trim();
+
+                try {
+                    Validation.validatePerson(name, age, email);
+                    list.add(
+                            new Person.Builder()
+                                    .withName(name)
+                                    .withAge(age)
+                                    .withEmail(email)
+                                    .build()
+                    );
+                } catch (RuntimeException e) {
+                    System.err.println("Ошибка в строке \"" + line + "\": " + e.getMessage());
+                }
+            } else {
+                System.err.println("Неправильный формат строки: " + line);
+            }
+        });
 
     }
 
@@ -103,7 +169,7 @@ public class Main {
         System.out.println(index >= 0 ? "Найдено: " + list.get(index) : "Не найдено");
     }
 
-    private static void runEvenOddSort() {
+    private static void runEvenFieldSort() {
 
     }
 

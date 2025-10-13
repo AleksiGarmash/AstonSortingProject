@@ -1,6 +1,6 @@
 package Util;
 
-public class ValidationService {
+public class Validation {
     public static void validatePerson(String name, Integer age, String email) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Имя обязательно для заполнения");
