@@ -9,14 +9,7 @@ import java.util.function.Predicate;
 /**
  * Многопоточный подсчёт вхождений: разбиваем список на части, считаем параллельно и суммируем.
  */
-public class CountOccurrencesTask<T> {
-
-    /* TODO:
-        ДОПОЛНИТЕЛЬНОЕ ЗАДАНИЕ 4:
-        Реализовать многопоточный метод, подсчитывающий количество вхождений элемента N в коллекцию и выводящий результат в консоль.
-     */
-    public CountOccurrencesTask() {
-    }
+public class CountOccurrencesTask {
 
     public static <T> int countOccurrences(CustomList<T> list, Predicate<T> predicate, ExecutorService pool, int parts) {
         int n = list.size();

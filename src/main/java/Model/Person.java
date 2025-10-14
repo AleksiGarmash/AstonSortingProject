@@ -1,8 +1,5 @@
 package Model;
 
-
-import Util.Validation;
-
 public class Person implements Comparable<Person> {
     private final String name;
     private final Integer age;

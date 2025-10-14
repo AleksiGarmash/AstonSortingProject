@@ -7,12 +7,6 @@ import java.util.stream.Stream;
 
 public class CustomList<T> implements Iterable<T> {
 
-    /* TODO:
-        ДОПОЛНИТЕЛЬНОЕ ЗАДАНИЕ 3:
-        Заполнение коллекций должно осуществляться посредством стримов.
-        Коллекции для заполнения должны быть кастомными.
-        */
-
     private final List<T> data = new ArrayList<>();
 
     public void add(T element) {

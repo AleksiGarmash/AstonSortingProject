@@ -11,20 +11,12 @@ import Util.Validation;
 
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
-
-    /* TODO: Задание Е (меню, логика работы, интеграция всех частей)
-        Реализовать:
-        1. Возможность выбирать варианты заполнения исходного массива данных (из файла, рандом, вручную) и его длину
-        2. Возможность найти какой-либо элемент отсортированной коллекции при помощи алгоритма бинарного поиска
-     */
-
 
     private static final Scanner scanner = new Scanner(System.in);
 
@@ -132,8 +124,8 @@ public class Main {
 
     private static void fillFromFile(CustomList<Person> list) throws IOException {
         list.clear();
-        System.out.println("Файл: ");
-        String path = scanner.nextLine();
+        System.out.println("Введите имя файла из папки resources: ");
+        String path = "src/main/resources/" + scanner.nextLine();
 
         FileUtil.readFile(path).forEach(line -> {
             String[] parts = line.split(", ");
@@ -158,8 +150,7 @@ public class Main {
                 System.err.println("Неправильный формат строки: " + line);
             }
         });
-
-
+        System.out.println(list.toString());
     }
 
     private static <T> void runSort(CustomList<T> list, Sorting.SortStrategy<T> strategy) {
@@ -200,10 +191,10 @@ public class Main {
         }
 
         System.out.print("Введите имя файла для записи: ");
-        String file = scanner.nextLine();
+        String file = "src/main/out/" + scanner.nextLine();
 
         FileUtil.appendToFile(file, list);
-        System.out.println("Данные записаны в файл!");
+        System.out.println("Данные записаны в файл! Проверьте папку out");
     }
 
     private static void countOccurrences(CustomList<Person> list) {
@@ -215,9 +206,9 @@ public class Main {
         System.out.print("Введите Имя для подсчета вхождений: ");
         String name = scanner.nextLine();
 
-        ExecutorService pool = Executors.newFixedThreadPool(4);
+        ExecutorService pool = Executors.newFixedThreadPool(2);
         try {
-            int count = CountOccurrencesTask.countOccurrences(list, p -> p.equals(name), pool, 3);
+            int count = CountOccurrencesTask.countOccurrences(list, p -> Boolean.parseBoolean(String.valueOf(p.getName().equals(name))), pool, 2);
             System.out.println("Количество вхождений: " + count);
         } finally {
             pool.shutdown();
