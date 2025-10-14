@@ -42,12 +42,10 @@ public class Person implements Comparable<Person> {
         }
         public Builder withEmail(String email) {
             this.email = email;
-            System.out.println(email);
             return this;
         }
 
         public Person build() {
-            Validation.validatePerson(name, age, email);
             return new Person(this);
         }
     }
