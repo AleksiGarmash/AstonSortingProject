@@ -38,12 +38,12 @@ public class CustomList<T> implements Iterable<T> {
     }
 
     public List<T> asList() {
-        return data;
+        return new ArrayList<>(data);
     }
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return data.iterator();
     }
 
     @Override

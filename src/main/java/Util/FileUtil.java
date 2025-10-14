@@ -26,6 +26,7 @@ public class FileUtil {
                 bw.write(t.toString());
                 bw.newLine();
             }
+            bw.flush();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

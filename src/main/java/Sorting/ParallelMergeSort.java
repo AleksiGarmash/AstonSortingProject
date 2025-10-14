@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-
 //Многопоточная реализация сортировки слиянием ThreadPool 2 потока
 public class ParallelMergeSort<T> implements SortStrategy<T> {
     private final ExecutorService executor;
@@ -28,9 +27,8 @@ public class ParallelMergeSort<T> implements SortStrategy<T> {
             parallelMergeSort(list, temp, 0, list.size() - 1, comparator).get();
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при многопоточной сортировке", e);
-        } finally {
-            executor.shutdown();
         }
+        executor.shutdown();
     }
 
     /**
@@ -44,24 +42,25 @@ public class ParallelMergeSort<T> implements SortStrategy<T> {
 
         int mid = left + (right - left) / 2;
 
-        // Два потока исполняют сортировку левой и правой части соответсвенно
+        // Два потока исполняют сортировку левой и правой части соответственно
         Future<?> leftFuture = executor.submit(() ->
                 parallelMergeSort(list, temp, left, mid, comparator));
         Future<?> rightFuture = executor.submit(() ->
                 parallelMergeSort(list, temp, mid + 1, right, comparator));
 
         // Ждем завершения обеих задач
-        try {
-            if (leftFuture != null) leftFuture.get();
-            if (rightFuture != null) rightFuture.get();
 
-            // соединяем отсортированные половины
-            merge(list, temp, left, mid, right, comparator);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return executor.submit(() -> {
+            try {
+                if (leftFuture != null) leftFuture.get();
+                if (rightFuture != null) rightFuture.get();
 
-        return null;
+                // соединяем отсортированные половины
+                merge(list, temp, left, mid, right, comparator);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     /**
