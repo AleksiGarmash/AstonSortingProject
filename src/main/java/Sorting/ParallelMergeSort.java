@@ -10,22 +10,34 @@ import java.util.concurrent.Future;
 
 //Многопоточная реализация сортировки слиянием ThreadPool 2 потока
 public class ParallelMergeSort<T> implements SortStrategy<T> {
-    private final ExecutorService executor;
-
-    public ParallelMergeSort() {
-        this.executor = Executors.newFixedThreadPool(2);
-    }
 
     @Override
     public void sort(List<T> list, Comparator<T> comparator) {
         if (list == null || list.size() <= 1) {
             return;
         }
+        ExecutorService executor = Executors.newFixedThreadPool(2);
 
         List<T> temp = new ArrayList<>(list);
+
         try {
-            // Запуск многопоточной сортировки
-            parallelMergeSort(list, temp, 0, list.size() - 1, comparator).get();
+            int mid = list.size() / 2;
+            // Два потока исполняют сортировку левой и правой части соответственно
+            Future<?> leftFuture = executor.submit(() -> {
+                sequentialMergeSort(list, temp, 0, mid, comparator);
+            });
+
+            Future<?> rightFuture = executor.submit(() -> {
+                sequentialMergeSort(list, temp, mid + 1, list.size() - 1, comparator);
+            });
+
+            // Ждем завершения обеих половин
+            leftFuture.get();
+            rightFuture.get();
+
+            // Сливаем результаты
+            merge(list, temp, 0, mid, list.size() - 1, comparator);
+
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при многопоточной сортировке", e);
         } finally {
@@ -33,35 +45,14 @@ public class ParallelMergeSort<T> implements SortStrategy<T> {
         }
     }
 
-    /**
-     * Метод многопоточной сортировки слиянием
-     * @return Future для отслеживания завершения задачи
-     */
-    private Future<?> parallelMergeSort(List<T> list, List<T> temp, int left, int right, Comparator<T> comparator) {
-        if (left >= right) {
-            return null;
-        }
-
-        int mid = left + (right - left) / 2;
-
-        // Два потока исполняют сортировку левой и правой части соответсвенно
-        Future<?> leftFuture = executor.submit(() ->
-                parallelMergeSort(list, temp, left, mid, comparator));
-        Future<?> rightFuture = executor.submit(() ->
-                parallelMergeSort(list, temp, mid + 1, right, comparator));
-
-        // Ждем завершения обеих задач
-        try {
-            if (leftFuture != null) leftFuture.get();
-            if (rightFuture != null) rightFuture.get();
-
+    private void sequentialMergeSort(List<T> list, List<T> temp, int left, int right, Comparator<T> comparator) {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+            sequentialMergeSort(list, temp, left, mid, comparator);
+            sequentialMergeSort(list, temp, mid + 1, right, comparator);
             // соединяем отсортированные половины
             merge(list, temp, left, mid, right, comparator);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     /**
