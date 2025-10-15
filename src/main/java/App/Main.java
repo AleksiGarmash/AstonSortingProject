@@ -10,9 +10,7 @@ import Util.FileUtil;
 import Util.Validation;
 
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -85,8 +83,7 @@ public class Main {
             String name = scanner.nextLine();
 
             System.out.print("Возраст: ");
-            int age = scanner.nextInt();
-            scanner.nextLine();
+            int age = Integer.parseInt(scanner.nextLine());
 
             System.out.print("Электронная почта: ");
             String email = scanner.nextLine();
@@ -153,9 +150,9 @@ public class Main {
         System.out.println(list.toString());
     }
 
-    private static <T> void runSort(CustomList<T> list, Sorting.SortStrategy<T> strategy) {
-        if (list.isEmpty()) {
-            System.out.println("Коллекция пуста!");
+    /*private static <T> void runSort(CustomList<T> list, Sorting.SortStrategy<T> strategy) {
+        if (list.isEmpty() || list.size() <= 1) {
+            System.out.println("Коллекция пуста или содержит один элемент -- сортировка не требуется!");
             return;
         }
 
@@ -164,10 +161,30 @@ public class Main {
 
         System.out.println("Отсортировано");
         System.out.println(list.toString());
+    }*/
+
+    private static void runSort(CustomList<Person> list, SortStrategy<Person> strategy) {
+        if (list.isEmpty() || list.size() <= 1) {
+            System.out.println("Коллекция пуста или содержит один элемент -- сортировка не требуется!");
+            return;
+        }
+
+        List<Person> tempList = new ArrayList<>(list.asList());
+
+        Sorter<Person
+                > sorter = new Sorter<>(strategy);
+        sorter.sort(tempList, Comparator.comparing(Person::getName));
+
+        list.clear();
+        for (Person person : tempList) {
+            list.add(person);
+        }
+
+        System.out.println("Отсортировано");
+        System.out.println(list.toString());
     }
 
     private static void runBinarySearch(CustomList<Person> list) {
-
         if (list.isEmpty()) {
             System.out.println("Коллекция пуста!");
             return;
@@ -186,7 +203,7 @@ public class Main {
 
     private static void appendToFile(CustomList<Person> list) {
         if (list.isEmpty()) {
-            System.out.println("Список пуст, нечего записывать!");
+            System.out.println("Коллекция пуста, нечего записывать!");
             return;
         }
 
@@ -199,7 +216,7 @@ public class Main {
 
     private static void countOccurrences(CustomList<Person> list) {
         if (list.isEmpty()) {
-            System.out.println("Список пуст!");
+            System.out.println("Коллекция пуста!");
             return;
         }
 
