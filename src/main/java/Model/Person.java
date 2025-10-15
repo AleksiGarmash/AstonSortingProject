@@ -49,8 +49,18 @@ public class Person implements Comparable<Person> {
 
     @Override
     public int compareTo(Person other) {
-        return this.name.compareTo(other.name);
+        // Сначала сравниваем по имени
+        int result = this.name.compareTo(other.name);
+        if (result != 0) { // Если имена разные, возвращаем результат сравнения имен
+             return result;
+        } // Если имена одинаковые, сравниваем по возрасту
+        result = Integer.compare(this.age, other.age);
+        if (result != 0) { // Если возраста разные, возвращаем результат сравнения возрастов
+            return result;
+        } // Если имя и возраст совпадают, сравниваем по электронной почте
+        return this.email.compareTo(other.email);
     }
+
 
     @Override
     public String toString() {
