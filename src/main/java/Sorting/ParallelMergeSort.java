@@ -3,27 +3,41 @@ package Sorting;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 
 //Многопоточная реализация сортировки слиянием ThreadPool 2 потока
 public class ParallelMergeSort<T> implements SortStrategy<T> {
-    private final ExecutorService executor;
-    private final static int THRESHOLD = 100000;
-
-    public ParallelMergeSort() {
-        this.executor = Executors.newFixedThreadPool(2);
-    }
 
     @Override
     public void sort(List<T> list, Comparator<T> comparator) {
         if (list == null || list.size() <= 1) {
             return;
         }
+        ExecutorService executor = Executors.newFixedThreadPool(2);
 
         List<T> temp = new ArrayList<>(list);
+
         try {
-            // Запуск многопоточной сортировки
-            parallelMergeSort(list, temp, 0, list.size() - 1, comparator).get();
+            int mid = list.size() / 2;
+            // Два потока исполняют сортировку левой и правой части соответственно
+            Future<?> leftFuture = executor.submit(() -> {
+                sequentialMergeSort(list, temp, 0, mid, comparator);
+            });
+
+            Future<?> rightFuture = executor.submit(() -> {
+                sequentialMergeSort(list, temp, mid + 1, list.size() - 1, comparator);
+            });
+
+            // Ждем завершения обеих половин
+            leftFuture.get();
+            rightFuture.get();
+
+            // Сливаем результаты
+            merge(list, temp, 0, mid, list.size() - 1, comparator);
+
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при многопоточной сортировке", e);
         } finally {
@@ -31,49 +45,14 @@ public class ParallelMergeSort<T> implements SortStrategy<T> {
         }
     }
 
-    /**
-     * Метод многопоточной сортировки слиянием
-     * @return Future для отслеживания завершения задачи
-     */
-    private Future<?> parallelMergeSort(List<T> list, List<T> temp, int left, int right, Comparator<T> comparator) {
-        if (left >= right) {
-            return CompletableFuture.completedFuture(null);
+    private void sequentialMergeSort(List<T> list, List<T> temp, int left, int right, Comparator<T> comparator) {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+            sequentialMergeSort(list, temp, left, mid, comparator);
+            sequentialMergeSort(list, temp, mid + 1, right, comparator);
+            // соединяем отсортированные половины
+            merge(list, temp, left, mid, right, comparator);
         }
-
-        if (right - left <= THRESHOLD) {
-            mergeSortSequential(list, temp, left, right, comparator);
-            return CompletableFuture.completedFuture(null);
-        }
-
-        int mid = left + (right - left) / 2;
-
-        // Два потока исполняют сортировку левой и правой части соответственно
-        Future<?> leftFuture = executor.submit(() ->
-                parallelMergeSort(list, temp, left, mid, comparator));
-        Future<?> rightFuture = executor.submit(() ->
-                parallelMergeSort(list, temp, mid + 1, right, comparator));
-
-        // Ждем завершения обеих задач
-
-        return executor.submit(() -> {
-            try {
-                if (leftFuture != null) leftFuture.get();
-                if (rightFuture != null) rightFuture.get();
-
-                // соединяем отсортированные половины
-                merge(list, temp, left, mid, right, comparator);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    private void mergeSortSequential(List<T> list, List<T> temp, int left, int right, Comparator<T> comparator) {
-        if (left >= right) return;
-        int mid = left + (right - left) / 2;
-        mergeSortSequential(list, temp, left, mid, comparator);
-        mergeSortSequential(list, temp, mid + 1, right, comparator);
-        merge(list, temp, left, mid, right, comparator);
     }
 
     /**

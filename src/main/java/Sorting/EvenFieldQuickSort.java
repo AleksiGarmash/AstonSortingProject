@@ -74,7 +74,7 @@ public class EvenFieldQuickSort<T> implements SortStrategy<T> {
             // Разделяем список и получаем индекс опорного элемента
             int pivotIndex = partition(evenElements, comparator, low, high);
 
-            // Тут происходит сортирова списков элементов выше и нижестоящие от опорного элемента
+            // Тут происходит сортировка списков элементов выше и нижестоящие от опорного элемента
             quickSortEvenElements(evenElements, comparator, low, pivotIndex - 1);
             quickSortEvenElements(evenElements, comparator, pivotIndex + 1, high);
         }

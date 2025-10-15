@@ -56,9 +56,9 @@ public class Main {
                 case "6" -> runSort(list, new MergeSort<>());
                 case "7" -> runSort(list, new ParallelMergeSort<>());
                 case "8" -> runBinarySearch(list);
-                case "9" -> runSort(list, new EvenFieldQuickSort<>(Person::getAge));
-                case "10" -> runSort(list, new EvenFieldBubbleSort<>(Person::getAge));
-                case "11" -> runSort(list, new EvenFieldMergeSort<>(Person::getAge));
+                case "9" -> runEvenSort(list, new EvenFieldQuickSort<>(Person::getAge));
+                case "10" -> runEvenSort(list, new EvenFieldBubbleSort<>(Person::getAge));
+                case "11" -> runEvenSort(list, new EvenFieldMergeSort<>(Person::getAge));
                 case "12" -> appendToFile(list);
                 case "13" -> countOccurrences(list);
                 case "14" -> {
@@ -150,19 +150,6 @@ public class Main {
         System.out.println(list.toString());
     }
 
-    /*private static <T> void runSort(CustomList<T> list, Sorting.SortStrategy<T> strategy) {
-        if (list.isEmpty() || list.size() <= 1) {
-            System.out.println("Коллекция пуста или содержит один элемент -- сортировка не требуется!");
-            return;
-        }
-
-        Sorter<T> sorter = new Sorter<>(strategy);
-        sorter.sort(list.asList(), Comparator.comparing(Object::toString));
-
-        System.out.println("Отсортировано");
-        System.out.println(list.toString());
-    }*/
-
     private static void runSort(CustomList<Person> list, SortStrategy<Person> strategy) {
         if (list.isEmpty() || list.size() <= 1) {
             System.out.println("Коллекция пуста или содержит один элемент -- сортировка не требуется!");
@@ -171,9 +158,28 @@ public class Main {
 
         List<Person> tempList = new ArrayList<>(list.asList());
 
-        Sorter<Person
-                > sorter = new Sorter<>(strategy);
+        Sorter<Person> sorter = new Sorter<>(strategy);
         sorter.sort(tempList, Comparator.comparing(Person::getName));
+
+        list.clear();
+        for (Person person : tempList) {
+            list.add(person);
+        }
+
+        System.out.println("Отсортировано");
+        System.out.println(list.toString());
+    }
+
+    private static void runEvenSort(CustomList<Person> list, SortStrategy<Person> strategy) {
+        if (list.isEmpty() || list.size() <= 1) {
+            System.out.println("Коллекция пуста или содержит один элемент -- сортировка не требуется!");
+            return;
+        }
+
+        List<Person> tempList = new ArrayList<>(list.asList());
+
+        Sorter<Person> sorter = new Sorter<>(strategy);
+        sorter.sort(tempList, Comparator.comparing(Person::getAge));
 
         list.clear();
         for (Person person : tempList) {
