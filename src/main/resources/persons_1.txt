@@ -1,0 +1,4 @@
+Diana, 28, diana@steam.us
+Bob, 30, bob@mail.ru
+Charlie, 22, charlie@mail.gb
+Alice, 25, alice@gmail.com
